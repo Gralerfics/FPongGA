@@ -17,6 +17,7 @@ package types is
         y: int;
     end record;
     function "+"(v1, v2: vec2i_t) return vec2i_t;
+    function "-"(v1, v2: vec2i_t) return vec2i_t;
 
     -- vec3i_t
     type vec3i_t is record
@@ -43,7 +44,7 @@ package types is
     function to_color(data: std_logic_vector(23 downto 0)) return color_t;
 
     -- direction
-    subtype dir_t is integer range 0 to 3; -- 0: x, 1: y, 2: z, 3: sphere
+    subtype dir_t is integer range 0 to 3; -- 0: x, 1: y, 2: z, 3: invalid
 
     -- shape
     type shape_t is record
@@ -87,6 +88,11 @@ package body types is
     function "+"(v1, v2: vec2i_t) return vec2i_t is
     begin
         return vec2i_t'(v1.x + v2.x, v1.y + v2.y);
+    end function;
+
+    function "-"(v1, v2: vec2i_t) return vec2i_t is
+    begin
+        return vec2i_t'(v1.x - v2.x, v1.y - v2.y);
     end function;
 
     function "+"(v1, v2: vec3i_t) return vec3i_t is

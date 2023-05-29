@@ -11,7 +11,9 @@ entity top_module is
         clk_sys, rst: in std_logic;
         spi_cs, spi_clk, spi_mosi: out std_logic;
         spi_miso: in std_logic;
-        vgaout: out vga_t
+        vgaout: out vga_t;
+        anodes_n: out std_logic_vector(7 downto 0);
+        segs_n: out std_logic_vector(0 to 7)
     );
 end entity;
 
@@ -135,7 +137,8 @@ architecture Behavioral of top_module is
         port (
             clk, rst: in std_logic;
             p1_pos, p2_pos: in vec2i_t;
-            current_ball_pos: out vec3i_t
+            current_ball_pos: out vec3i_t;
+            score_1_out, score_2_out: out int
         );
     end component;
 
@@ -148,6 +151,15 @@ architecture Behavioral of top_module is
             -- Angle
             angle_lr_dir, angle_ud_dir: in int; -- -1 or 0 or 1, l and u is -1
             current_angle: out vec2i_t
+        );
+    end component;
+
+    component seven_segments_display_driver is
+        port (
+            clk_sys, rst: in std_logic;
+            nums: in bcd_array_t(7 downto 0);
+            anodes_n: out std_logic_vector(7 downto 0);
+            segs_n: out std_logic_vector(0 to 7)
         );
     end component;
 
@@ -189,10 +201,13 @@ architecture Behavioral of top_module is
     signal gp_data_out: gamepad_data_t;
 
     signal current_ball_pos: vec3i_t;
+    signal score_1, score_2: int;
 
     signal angle_lr_dir, angle_ud_dir: int;
     signal current_p1_pos, current_p2_pos: vec2i_t;
     signal current_angle: vec2i_t;
+
+    signal bcd_nums: bcd_array_t(7 downto 0);
 begin
     -- Display Controller
         clk_vga_gen: clk_vga_generator
@@ -319,19 +334,6 @@ begin
                 next_shape_out => next_shape_out
             );
 
-    -- Peripherals
-        gp_ps2: gamepad
-            port map (
-                clk => clk_sys,
-                rst => rst,
-                spi_cs => spi_cs,
-                spi_clk => spi_clk,
-                spi_mosi => spi_mosi,
-                spi_miso => spi_miso,
-                data_valid => gp_data_valid,
-                data_out => gp_data_out
-            );
-
     -- Controlling
         ball_state: ball_controller
             port map (
@@ -339,7 +341,9 @@ begin
                 rst => rst,
                 p1_pos => p1_pos,
                 p2_pos => p2_pos,
-                current_ball_pos => current_ball_pos
+                current_ball_pos => current_ball_pos,
+                score_1_out => score_1,
+                score_2_out => score_2
             );
 
         p_update: player_state_updater
@@ -362,5 +366,26 @@ begin
         angle_lr_dir <= -1 when gp_data_out.left = '1' else 1 when gp_data_out.right = '1' else 0;
         angle_ud_dir <= -1 when gp_data_out.up = '1' else 1 when gp_data_out.down = '1' else 0;
 
-    -- Debug
+    -- Peripherals
+        gp_ps2: gamepad
+            port map (
+                clk => clk_sys,
+                rst => rst,
+                spi_cs => spi_cs,
+                spi_clk => spi_clk,
+                spi_mosi => spi_mosi,
+                spi_miso => spi_miso,
+                data_valid => gp_data_valid,
+                data_out => gp_data_out
+            );
+        
+        seven_segs_driver: seven_segments_display_driver port map (clk_sys => clk_sys, rst => rst, nums => bcd_nums, anodes_n => anodes_n, segs_n => segs_n);
+        bcd_nums(7) <= std_logic_vector(to_unsigned(score_1 / 1000 mod 10, 4));
+        bcd_nums(6) <= std_logic_vector(to_unsigned(score_1 / 100 mod 10, 4));
+        bcd_nums(5) <= std_logic_vector(to_unsigned(score_1 / 10 mod 10, 4));
+        bcd_nums(4) <= std_logic_vector(to_unsigned(score_1 mod 10, 4));
+        bcd_nums(3) <= std_logic_vector(to_unsigned(score_2 / 1000 mod 10, 4));
+        bcd_nums(2) <= std_logic_vector(to_unsigned(score_2 / 100 mod 10, 4));
+        bcd_nums(1) <= std_logic_vector(to_unsigned(score_2 / 10 mod 10, 4));
+        bcd_nums(0) <= std_logic_vector(to_unsigned(score_2 mod 10, 4));
 end architecture;

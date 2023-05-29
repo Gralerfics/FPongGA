@@ -39,7 +39,6 @@ set rt::rc [catch {
     /home/gralerfics/MyFiles/Workspace/FPongGA/ips/display_ram
     /home/gralerfics/MyFiles/Workspace/FPongGA/ips/clk_vga_generator
     /home/gralerfics/MyFiles/Workspace/FPongGA/ips/clk_ppl_generator
-    /home/gralerfics/MyFiles/Workspace/FPongGA/ips/sqrt_gen
   } {
       /home/gralerfics/MyFiles/Softwares/Xilinx/Vivado/2022.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv
       /home/gralerfics/MyFiles/Softwares/Xilinx/Vivado/2022.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv
@@ -48,7 +47,6 @@ set rt::rc [catch {
       ./.Xil/Vivado-57853-gralerfics-HP-ZHAN-66-Pro-G1-MT/realtime/display_ram_stub.vhdl
       ./.Xil/Vivado-57853-gralerfics-HP-ZHAN-66-Pro-G1-MT/realtime/clk_vga_generator_stub.vhdl
       ./.Xil/Vivado-57853-gralerfics-HP-ZHAN-66-Pro-G1-MT/realtime/clk_ppl_generator_stub.vhdl
-      ./.Xil/Vivado-57853-gralerfics-HP-ZHAN-66-Pro-G1-MT/realtime/sqrt_gen_stub.vhdl
     }
       rt::read_vhdl -lib xpm /home/gralerfics/MyFiles/Softwares/Xilinx/Vivado/2022.2/data/ip/xpm/xpm_VCOMP.vhd
       rt::read_vhdl -vhdl2008 -lib xil_defaultlib {
@@ -57,6 +55,7 @@ set rt::rc [catch {
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/compute/angle_to_coord.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/compute/angle_to_lookat_relative.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/control/ball_controller.vhd
+      /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/peripherals/decoder_3_to_8.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/display/display_buffers.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/control/frequency_divider.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/peripherals/gamepad.vhd
@@ -64,6 +63,8 @@ set rt::rc [catch {
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/pipeline/pipeline_entrance.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/pipeline/pipeline_process.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/control/player_state_updater.vhd
+      /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/peripherals/seven_segments_display_decoder.vhd
+      /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/peripherals/seven_segments_display_driver.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/display/vga_scanner.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/compute/viewport_params.vhd
       /home/gralerfics/MyFiles/Workspace/FPongGA/src/hdl/pipeline/viewport_scanner.vhd
